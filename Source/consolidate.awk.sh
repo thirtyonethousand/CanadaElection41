@@ -25,6 +25,13 @@ function quote_string(bare_string)
 	return guarded_string
 }
 
+# Clean numeric fields
+function clean_number(bare_number)
+{
+	gsub(/[^0-9]+/, "", bare_number)
+	return bare_number
+}
+
 # Initialization
 BEGIN {
 
@@ -47,11 +54,12 @@ BEGIN {
 		quote_string("electoral_district_english"), \
 		quote_string("electoral_district_french"), \
 		quote_string("polling_station_number"), \
-		quote_string("polling_station_english"), \
-		quote_string("polling_station_french"), \
+		quote_string("polling_station"), \
 		quote_string("void_poll_flag"), \
 		quote_string("no_poll_flag"), \
 		quote_string("merge_poll"), \
+		quote_string("rejected_count"), \
+		quote_string("elector_count"), \
 		quote_string("last_name"), \
 		quote_string("middle_name"), \
 		quote_string("first_name"), \
@@ -68,9 +76,15 @@ FNR > 1 {
 	# Increment record count
 	record_number++
 
+	# Clean carriage returns
+	rejected_count = $9
+	elector_count = $10
+	vote_count = $18
+
+	# Return record
 	print \
-		quote_string(record_number), \
-		quote_string(election_number), \
+		clean_number(record_number), \
+		clean_number(election_number), \
 		quote_string($1), \
 		quote_string($2), \
 		quote_string($3), \
@@ -79,13 +93,14 @@ FNR > 1 {
 		quote_string($6), \
 		quote_string($7), \
 		quote_string($8), \
-		quote_string($9), \
-		quote_string($10), \
+		clean_number(rejected_count), \
+		clean_number(elector_count), \
 		quote_string($11), \
 		quote_string($12), \
 		quote_string($13), \
 		quote_string($14), \
 		quote_string($15), \
 		quote_string($16), \
-		quote_string($17)
+		quote_string($17), \
+		clean_number(vote_count)
 }

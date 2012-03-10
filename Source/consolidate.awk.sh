@@ -17,27 +17,20 @@
 # @param string File name
 # @optional Additional file names can be added
 
-# Format bare strings
-function quote_string(bare_string)
+# Clean up and quote strings
+function quote_string(dirty_string)
 {
-	gsub(/\"+/, "", bare_string)
-	guarded_string = "\"" bare_string "\""
-	return guarded_string
-}
-
-# Clean numeric fields
-function clean_number(bare_number)
-{
-	gsub(/[^0-9]+/, "", bare_number)
-	return bare_number
+	gsub(/\"/, "", dirty_string)
+	clean_string = "\"" dirty_string "\""
+	return clean_string
 }
 
 # Initialization
 BEGIN {
 
-	# Read each line as a record, with comma separated fields
-	RS = "\n"
-	FS = ","
+	# Read each line as a single field
+	RS = "\r\n"
+	FS = "\r\n"
 
 	# Return each record as a line, with comma separated fields
 	ORS = "\n"
@@ -48,26 +41,26 @@ BEGIN {
 
 	# Header row
 	print \
-		quote_string("record_number"), \
-		quote_string("election_number"), \
-		quote_string("electoral_district_number"), \
-		quote_string("electoral_district_english"), \
-		quote_string("electoral_district_french"), \
-		quote_string("polling_station_number"), \
-		quote_string("polling_station"), \
-		quote_string("void_poll_flag"), \
-		quote_string("no_poll_flag"), \
-		quote_string("merge_poll"), \
-		quote_string("rejected_count"), \
-		quote_string("elector_count"), \
-		quote_string("last_name"), \
-		quote_string("middle_name"), \
-		quote_string("first_name"), \
-		quote_string("political_affiliation_english"), \
-		quote_string("political_affiliation_french"), \
-		quote_string("incumbent_flag"), \
-		quote_string("elected_flag"), \
-		quote_string("vote_count")
+		"record_number", \
+		"election_number", \
+		"electoral_district_number", \
+		"electoral_district_english", \
+		"electoral_district_french", \
+		"polling_station_number", \
+		"polling_station", \
+		"void_poll_flag", \
+		"no_poll_flag", \
+		"merge_poll", \
+		"rejected_count", \
+		"elector_count", \
+		"last_name", \
+		"middle_name", \
+		"first_name", \
+		"political_affiliation_english", \
+		"political_affiliation_french", \
+		"incumbent_flag", \
+		"elected_flag", \
+		"vote_count"
 }
 
 # Parse a single line as long as it is after the header
@@ -76,31 +69,48 @@ FNR > 1 {
 	# Increment record count
 	record_number++
 
-	# Clean carriage returns
-	rejected_count = $9
-	elector_count = $10
-	vote_count = $18
+	# Get the row
+	return_row = $0
+
+	# test the syntax
+	test_result = match(return_row, /^[0-9]+,\"[^\"]*\",\"[^\"]*\",\"[^\"]*\",\"[^\"]*\",[YN],[YN],\"[^\"]*\",[0-9]+,[0-9]+,\"[^\"]*\",\"[^\"]*\",\"[^\"]*\",\"[^\"]*\",\"[^\"]*\",[YN],[YN],[0-9]+$/)
+
+	# Syntax failure
+	if (test_result <= 0)
+	{
+		field_count = split(return_row, field_list, /,/)
+		return_row = \
+			field_list[1] "," \
+			quote_string(field_list[2]) "," \
+			quote_string(field_list[3]) "," \
+			quote_string(field_list[4]) "," \
+			quote_string(field_list[5]) "," \
+			field_list[6] "," \
+			field_list[7] "," \
+			quote_string(field_list[8]) "," \
+			field_list[9] "," \
+			field_list[10] "," \
+			quote_string(field_list[11]) "," \
+			quote_string(field_list[12]) "," \
+			quote_string(field_list[13]) "," \
+			quote_string(field_list[14]) "," \
+			quote_string(field_list[15]) "," \
+			field_list[16] "," \
+			field_list[17] "," \
+			field_list[18]
+	}
+
+	# Clean up miscellaneous formatting
+	gsub(/,\" +/, ",\"", return_row)
+	gsub(/ +\",/, "\",", return_row)
+	gsub(/,Y/, ",\"Y\"", return_row)
+	gsub(/,N/, ",\"N\"", return_row)
+	gsub(/,\"\",/, ",<<NULL>>,", return_row)
+	gsub(/,,/, ",<<NULL>>,", return_row)
 
 	# Return record
 	print \
-		clean_number(record_number), \
-		clean_number(election_number), \
-		quote_string($1), \
-		quote_string($2), \
-		quote_string($3), \
-		quote_string($4), \
-		quote_string($5), \
-		quote_string($6), \
-		quote_string($7), \
-		quote_string($8), \
-		clean_number(rejected_count), \
-		clean_number(elector_count), \
-		quote_string($11), \
-		quote_string($12), \
-		quote_string($13), \
-		quote_string($14), \
-		quote_string($15), \
-		quote_string($16), \
-		quote_string($17), \
-		clean_number(vote_count)
+		record_number, \
+		election_number, \
+		return_row
 }

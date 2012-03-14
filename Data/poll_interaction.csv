@@ -1,0 +1,13 @@
+"unheld_electors","ballot_excess","electors_registered","number_type","parent_poll","merged_poll","poll_count"
+"yes","no","yes","other","no","no",3
+"no","yes","yes","other","no","no",11
+"no","yes","no","600","no","no",4702
+"no","yes","no","600","yes","no",3
+"no","yes","no","S/R 2","no","no",308
+"no","no","yes","other","no","no",65781
+"no","no","yes","other","no","yes",759
+"no","no","yes","other","yes","no",659
+"no","no","no","600","no","yes",3
+"no","no","no","600","yes","no",1
+"no","no","no","other","no","no",1444
+"no","no","no","other","no","yes",6

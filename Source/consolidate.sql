@@ -45,7 +45,7 @@ COMMENT ON COLUMN poll_candidate_raw.electoral_district_english IS 'English name
 COMMENT ON COLUMN poll_candidate_raw.electoral_district_french IS 'French name of the electoral district';
 COMMENT ON COLUMN poll_candidate_raw.polling_station_number IS 'Unique polling station identifier';
 COMMENT ON COLUMN poll_candidate_raw.polling_station IS 'Name of polling station';
-COMMENT ON COLUMN poll_candidate_raw.void_poll_flag IS 'Y:void poll, N:active poll';
+COMMENT ON COLUMN poll_candidate_raw.void_poll_flag IS 'Y: void poll, N: active poll';
 COMMENT ON COLUMN poll_candidate_raw.no_poll_flag IS 'Y: poll was not held, N: poll held';
 COMMENT ON COLUMN poll_candidate_raw.merge_poll IS 'Identifier of merged poll';
 COMMENT ON COLUMN poll_candidate_raw.rejected_count IS 'Number of rejected ballots';
@@ -92,3 +92,52 @@ WITH
 	QUOTE '"'
 	ESCAPE '\'
 	ENCODING 'LATIN1';
+
+-- Self referential links for polls not merged
+UPDATE poll_candidate_raw
+	SET merge_poll = polling_station_number
+WHERE merge_poll IS NULL;
+
+-- Table browsing key
+ALTER TABLE poll_candidate_raw ADD CONSTRAINT pk_poll_candidate_raw PRIMARY KEY(record_number);
+COMMENT ON CONSTRAINT pk_poll_candidate_raw ON poll_candidate_raw IS 'Facilitate table browsing';
+
+-- Recording link key
+ALTER TABLE poll_candidate_raw ADD CONSTRAINT uk_poll_candidate_raw UNIQUE
+(
+	election_number, 
+	electoral_district_number, 
+	polling_station_number, 
+	last_name, 
+	first_name
+);
+COMMENT ON CONSTRAINT uk_poll_candidate_raw ON poll_candidate_raw IS 'Facilitate record matching';
+
+-- Record linking key
+CREATE INDEX ix_poll_candidate_raw ON poll_candidate_raw USING btree
+(
+	election_number, 
+	electoral_district_number, 
+	merge_poll, 
+	last_name, 
+	first_name
+);
+
+-- Record linking key
+ALTER TABLE poll_candidate_raw ADD CONSTRAINT fk_poll_candidate_raw FOREIGN KEY 
+(
+	election_number, 
+	electoral_district_number, 
+	merge_poll, 
+	last_name, 
+	first_name
+)
+REFERENCES poll_candidate_raw 
+(
+	election_number, 
+	electoral_district_number, 
+	polling_station_number, 
+	last_name, 
+	first_name
+) MATCH FULL ON UPDATE RESTRICT ON DELETE RESTRICT;
+COMMENT ON CONSTRAINT fk_poll_candidate_raw ON poll_candidate_raw IS 'Facilitate record matching';

@@ -1,0 +1,15 @@
+"electoral_district_number","elector_district","polling_station_number","polling_station","void_poll","not_held","merge_poll","elector_count","candidate_count","vote_count","rejected_count","merge_count"
+10003,"Humber--St. Barbe--Baie Verte","501","Mobile poll/Bureau itinérant","N","Y","501",1,5,0,0,0
+48022,"Peace River","84","Bison Lake","N","Y","84",3,6,0,0,0
+59013,"Langley","400","Langley","N","Y","400",103,5,0,0,0
+24032,"Laval","407","Laval","N","N","407",75,6,102,4,0
+35093,"Toronto Centre","89","Toronto","N","N","89",57,8,116,0,0
+35093,"Toronto Centre","401","Toronto","N","N","401",48,8,111,3,0
+35093,"Toronto Centre","433","Toronto","N","N","433",74,8,87,1,0
+46003,"Churchill","47","Bird","N","N","47",26,4,39,0,0
+46007,"Portage--Lisgar","508","Mobile poll/Bureau itinérant","N","N","508",71,5,72,0,0
+47002,"Blackstrap","501","Mobile poll/Bureau itinérant","N","N","501",19,4,34,1,0
+48006,"Calgary Centre","504","Mobile poll/Bureau itinérant","N","N","504",55,4,70,0,0
+48010,"Crowfoot","509","Mobile poll/Bureau itinérant","N","N","509",43,6,58,0,0
+48016,"Edmonton--Sherwood Park","400","Edmonton","N","N","400",49,6,84,1,0
+59010,"Kamloops--Thompson--Cariboo","500","Mobile poll/Bureau itinérant","N","N","500",15,5,21,0,0

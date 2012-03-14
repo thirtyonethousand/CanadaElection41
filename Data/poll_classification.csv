@@ -1,0 +1,36 @@
+"number_type","name_type","parent_poll","merged_poll","void_poll","not_held","electors_registered","candidates_nominated","ballots_cast","poll_count"
+"100","regular","no","no","no","no","yes","yes","yes",60319
+"100","regular","no","no","no","no","yes","yes","no",2
+"100","regular","no","no","no","yes","yes","yes","no",1
+"100","regular","no","no","yes","no","no","yes","no",1277
+"100","regular","no","yes","no","no","yes","yes","no",328
+"100","regular","no","yes","yes","no","no","yes","no",2
+"100","regular","yes","no","no","no","yes","yes","yes",315
+"100","mobile","no","yes","no","no","yes","yes","no",266
+"100","mobile","yes","no","no","no","yes","yes","yes",23
+"200","regular","no","no","no","no","yes","yes","yes",1997
+"200","regular","no","no","yes","no","no","yes","no",37
+"200","regular","no","yes","no","no","yes","yes","no",16
+"200","regular","yes","no","no","no","yes","yes","yes",14
+"200","mobile","no","yes","no","no","yes","yes","no",8
+"400","regular","no","no","no","no","yes","yes","yes",1781
+"400","regular","no","no","no","yes","yes","yes","no",1
+"400","regular","no","no","yes","no","no","yes","no",110
+"400","regular","no","no","yes","yes","no","yes","no",3
+"400","regular","no","yes","no","no","yes","yes","no",80
+"400","regular","no","yes","no","no","no","yes","no",2
+"400","regular","no","yes","yes","no","no","yes","no",2
+"400","regular","yes","no","no","no","yes","yes","yes",46
+"400","mobile","no","yes","no","no","yes","yes","no",8
+"400","mobile","yes","no","no","no","yes","yes","yes",2
+"500","regular","no","no","no","no","yes","yes","yes",1
+"500","mobile","no","no","no","no","yes","yes","yes",1384
+"500","mobile","no","no","no","yes","yes","yes","no",1
+"500","mobile","no","no","yes","no","no","yes","no",17
+"500","mobile","no","yes","no","no","yes","yes","no",53
+"500","mobile","yes","no","no","no","yes","yes","yes",259
+"600","regular","no","no","no","no","no","yes","yes",4702
+"600","regular","no","yes","no","no","no","yes","no",3
+"600","regular","yes","no","no","no","no","yes","yes",4
+"special 1","special 1","no","no","no","no","yes","yes","yes",308
+"special 2","special 2","no","no","no","no","no","yes","yes",308

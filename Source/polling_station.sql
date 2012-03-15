@@ -252,16 +252,17 @@ GROUP BY
 	1, 2, 3
 
 -- Integrated luminosity
-WINDOW merged_polling_stations AS
-(
-	PARTITION BY 
-		electoral_district_number, 
-		MAX(merge_poll) 
-	ORDER BY
-		length("substring"(polling_station_number, '^[0-9]+')) ASC NULLS LAST, 
-		polling_station_number ASC NULLS FIRST 
-	ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-)
+WINDOW 
+	merged_polling_stations AS
+	(
+		PARTITION BY 
+			electoral_district_number, 
+			MAX(merge_poll) 
+		ORDER BY
+			length("substring"(polling_station_number, '^[0-9]+')) ASC NULLS LAST, 
+			polling_station_number ASC NULLS FIRST 
+		ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+	)
 
 -- Sort definition
 ORDER BY

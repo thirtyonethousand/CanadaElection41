@@ -22,8 +22,7 @@ vote.affiliate.plot <- function(
 	column.count = 6,
 	output.width = 12288,
 	output.height = 8192,
-	point.size = 0.1,
-	label.magnification = 16
+	point.size = 0.5
 )
 {
 
@@ -140,12 +139,11 @@ tic <- proc.time();
 		png(
 			file = file.name,
 			height = output.height,
-			width = output.width
-		);
-		par(
-			cex.main = label.magnification,
-			cex.lab = label.magnification,
-			cex.axis = label.magnification
+			width = output.width,
+			res = 1024,
+			pointsize = 8,
+			type = "cairo",
+			bg = "white"
 		);
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #

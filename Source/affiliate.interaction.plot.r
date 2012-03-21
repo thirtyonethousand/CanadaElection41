@@ -20,8 +20,7 @@ affiliate.interaction.plot <- function(
 	censored.electors = " -- censored electors -- ",
 	output.width = 16384,
 	output.height = 16384,
-	point.size = 0.1,
-	label.magnification = 16
+	point.size = 0.5
 )
 {
 
@@ -116,12 +115,11 @@ tic <- proc.time();
 		png(
 			file = file.name,
 			height = output.height,
-			width = output.width
-		);
-		par(
-			cex.main = label.magnification,
-			cex.lab = label.magnification,
-			cex.axis = label.magnification
+			width = output.width,
+			res = 1024,
+			pointsize = 8,
+			type = "cairo",
+			bg = "white"
 		);
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #

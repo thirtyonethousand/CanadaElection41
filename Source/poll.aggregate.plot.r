@@ -25,10 +25,9 @@ poll.aggregate.plot <- function(
 	hash.dimension = "affiliation_hash",
 	rejected.ballots = " -- rejected ballots -- ",
 	censored.electors = " -- censored electors -- ",
-	output.width = 16384,
-	output.height = 16384,
-	point.size = 0.1,
-	label.magnification = 16
+	output.width = 8192,
+	output.height = 8192,
+	point.size = 0.5
 )
 {
 
@@ -36,6 +35,23 @@ poll.aggregate.plot <- function(
 cat("start plot poll aggregate counts\n");
 tic <- proc.time();
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
+
+	# Instantiate needles and pincushions
+	electors.index <- "Electors";
+	ballots.index <- "Ballots";
+	votes.index <- "Votes";
+	rejected.index <- "Rejected";
+	censored.index <- "Censored";
+	iterator.data <- c(
+		electors.index,
+		ballots.index,
+		votes.index,
+		rejected.index,
+		censored.index
+	);
+	new.data <- list();
+	regular.data <- list();
+	range.data <- list();
 
 	# Find the needles in the haystack
 	needle.index <- as.logical(
@@ -49,7 +65,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	new.electors.data <- aggregate(
+	new.data[[electors.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -57,14 +73,14 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		new.electors.data[, district.dimension],
-		new.electors.data[, station.dimension],
+		new.data[[electors.index]][, district.dimension],
+		new.data[[electors.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	new.electors.data <- new.electors.data[needle.index, "x"];
+	new.data[[electors.index]] <- new.data[[electors.index]][needle.index, "x"];
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -85,7 +101,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	regular.electors.data <- aggregate(
+	regular.data[[electors.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -93,15 +109,15 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		regular.electors.data[, district.dimension],
-		regular.electors.data[, station.dimension],
+		regular.data[[electors.index]][, district.dimension],
+		regular.data[[electors.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	regular.electors.data <- regular.electors.data[needle.index, "x"];
-	electors.range <- c(0, max(new.electors.data, regular.electors.data));
+	regular.data[[electors.index]] <- regular.data[[electors.index]][needle.index, "x"];
+	range.data[[electors.index]] <- c(0, max(new.data[[electors.index]], regular.data[[electors.index]]));
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -125,7 +141,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	new.ballots.data <- aggregate(
+	new.data[[ballots.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -133,14 +149,14 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		new.ballots.data[, district.dimension],
-		new.ballots.data[, station.dimension],
+		new.data[[ballots.index]][, district.dimension],
+		new.data[[ballots.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	new.ballots.data <- new.ballots.data[needle.index, "x"];
+	new.data[[ballots.index]] <- new.data[[ballots.index]][needle.index, "x"];
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -162,7 +178,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	regular.ballots.data <- aggregate(
+	regular.data[[ballots.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -170,15 +186,15 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		regular.ballots.data[, district.dimension],
-		regular.ballots.data[, station.dimension],
+		regular.data[[ballots.index]][, district.dimension],
+		regular.data[[ballots.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	regular.ballots.data <- regular.ballots.data[needle.index, "x"];
-	ballots.range <- c(0, max(new.ballots.data, regular.ballots.data));
+	regular.data[[ballots.index]] <- regular.data[[ballots.index]][needle.index, "x"];
+	range.data[[ballots.index]] <- c(0, max(new.data[[ballots.index]], regular.data[[ballots.index]]));
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -203,7 +219,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	new.votes.data <- aggregate(
+	new.data[[votes.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -211,14 +227,14 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		new.votes.data[, district.dimension],
-		new.votes.data[, station.dimension],
+		new.data[[votes.index]][, district.dimension],
+		new.data[[votes.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	new.votes.data <- new.votes.data[needle.index, "x"];
+	new.data[[votes.index]] <- new.data[[votes.index]][needle.index, "x"];
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -241,7 +257,7 @@ tic <- proc.time();
 	group.by[[station.dimension]] <- factor(haystack.data[needle.index, station.dimension], exclude = NULL);
 
 	# Stick the needles in the pincushion
-	regular.votes.data <- aggregate(
+	regular.data[[votes.index]] <- aggregate(
 		haystack.data[needle.index, elector.dimension],
 		by = group.by,
 		FUN = sum
@@ -249,15 +265,15 @@ tic <- proc.time();
 
 	# Find the needles in the haystack
 	needle.index <- order(
-		regular.votes.data[, district.dimension],
-		regular.votes.data[, station.dimension],
+		regular.data[[votes.index]][, district.dimension],
+		regular.data[[votes.index]][, station.dimension],
 		na.last = TRUE,
 		decreasing = FALSE
 	);
 
 	# Pull the needles from the haystack and stick them in the pincushion
-	regular.votes.data <- regular.votes.data[needle.index, "x"];
-	votes.range <- c(0, max(new.votes.data, regular.votes.data));
+	regular.data[[votes.index]] <- regular.data[[votes.index]][needle.index, "x"];
+	range.data[[votes.index]] <- c(0, max(new.data[[votes.index]], regular.data[[votes.index]]));
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -276,7 +292,7 @@ tic <- proc.time();
 	);
 
 	# Stick the needles in the pincushion
-	new.rejected.data <- haystack.data[needle.index, elector.dimension];
+	new.data[[rejected.index]] <- haystack.data[needle.index, elector.dimension];
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -293,8 +309,8 @@ tic <- proc.time();
 	);
 
 	# Stick the needles in the pincushion
-	regular.rejected.data <- haystack.data[needle.index, elector.dimension];
-	rejected.range <- c(0, max(new.rejected.data, regular.rejected.data));
+	regular.data[[rejected.index]] <- haystack.data[needle.index, elector.dimension];
+	range.data[[rejected.index]] <- c(0, max(new.data[[rejected.index]], regular.data[[rejected.index]]));
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -313,7 +329,7 @@ tic <- proc.time();
 	);
 
 	# Stick the needles in the pincushion
-	new.censored.data <- haystack.data[needle.index, elector.dimension];
+	new.data[[censored.index]] <- haystack.data[needle.index, elector.dimension];
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -330,8 +346,8 @@ tic <- proc.time();
 	);
 
 	# Stick the needles in the pincushion
-	regular.censored.data <- haystack.data[needle.index, elector.dimension];
-	censored.range <- c(0, max(new.censored.data, regular.censored.data));
+	regular.data[[censored.index]] <- haystack.data[needle.index, elector.dimension];
+	range.data[[censored.index]] <- c(0, max(new.data[[censored.index]], regular.data[[censored.index]]));
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
@@ -371,12 +387,11 @@ tic <- proc.time();
 		png(
 			file = file.name,
 			height = output.height,
-			width = output.width
-		);
-		par(
-			cex.main = label.magnification,
-			cex.lab = label.magnification,
-			cex.axis = label.magnification
+			width = output.width,
+			res = 1024,
+			pointsize = 8,
+			type = "cairo",
+			bg = "white"
 		);
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
@@ -395,7 +410,7 @@ tic <- proc.time();
 
 	# Set the multi-plot array
 	par(
-		mfrow = c(4,4),
+		mfrow = c(5,5),
 		mar = c(4, 4, 0, 2),
 		bg = "white"
 	);
@@ -403,402 +418,103 @@ tic <- proc.time();
 	# Next plot
 	par(mfg = c(1, 1));
 
-	# Start a new empty plot
-	plot(
-		ballots.range,
-		electors.range,
-		type = "n",
-		xlab = "Ballots",
-		ylab = "Electors",
-		frame.plot = FALSE
-	);
+	# Paint the rows with the needles
+	for (row.instance in iterator.data) {
+		for (column.instance in iterator.data) {
 
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.ballots.data,
-		y = regular.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
+			# Cumulative distributions on the diagonal
+			if (row.instance == column.instance)
+			{
 
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.ballots.data,
-		y = new.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
+				# Start a new empty plot
+				plot(
+					range.data[[row.instance]],
+					c(0, 1),
+					type = "n",
+					xlab = row.instance,
+					ylab = "Cumulative Fraction",
+					frame.plot = FALSE
+				);
 
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot electors ballots\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
+				# Stick the needles in the pincushion
+				lines(
+					x = c(0, sort(regular.data[[row.instance]])),
+					y = (0:length(regular.data[[row.instance]])) / length(regular.data[[row.instance]]),
+					type = "s",
+					lwd = point.size,
+					lty = 1,
+					col = "green"
+				);
 
-	# Next plot
-	par(mfg = c(1, 2));
+				# Stick the needles in the pincushion
+				lines(
+					x = c(0, sort(new.data[[row.instance]])),
+					y = (0:length(new.data[[row.instance]])) / length(new.data[[row.instance]]),
+					type = "s",
+					lwd = point.size,
+					lty = 1,
+					col = "blue"
+				);
+			}
 
-	# Start a new empty plot
-	plot(
-		votes.range,
-		electors.range,
-		type = "n",
-		xlab = "Votes",
-		ylab = "Electors",
-		frame.plot = FALSE
-	);
+			# Scatter plots
+			else
+			{
 
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.votes.data,
-		y = regular.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
+				# Start a new empty plot
+				plot(
+					range.data[[column.instance]],
+					range.data[[row.instance]],
+					type = "n",
+					xlab = "",
+					ylab = "",
+					xaxt = "n",
+					yaxt = "n",
+					frame.plot = FALSE
+				);
 
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.votes.data,
-		y = new.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
+				# Test for row less than column
+				if (par("mfg")[1] < par("mfg")[2])
+				{
 
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot electors votes\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
+					# Annotate the plot
+					axis(1);
+					axis(2);
+					title(
+						xlab = column.instance,
+						ylab = row.instance
+					);
 
-	# Next plot
-	par(mfg = c(1, 3));
+					# Pull the needles from the haystack and stick them in the pincushion
+					points(
+						x = regular.data[[column.instance]],
+						y = regular.data[[row.instance]],
+						type = "p",
+						pch = 16,
+						cex = point.size,
+						col = regular.colour
+					);
 
-	# Start a new empty plot
-	plot(
-		rejected.range,
-		electors.range,
-		type = "n",
-		xlab = "Rejected",
-		ylab = "Electors",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.rejected.data,
-		y = regular.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.rejected.data,
-		y = new.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
+					# Pull the needles from the haystack and stick them in the pincushion
+					points(
+						x = new.data[[column.instance]],
+						y = new.data[[row.instance]],
+						type = "p",
+						pch = 16,
+						cex = point.size,
+						col = new.colour
+					);
+				}
+			}
 
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
 toc <- proc.time() - tic;
 cat(toc);
-cat(" - plot electors rejected\n");
+cat(paste(" - plot ", row.instance, " - ", column.instance, "\n", sep = ""));
 tic <- proc.time();
 # # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(1, 4));
-
-	# Start a new empty plot
-	plot(
-		censored.range,
-		electors.range,
-		type = "n",
-		xlab = "Censored",
-		ylab = "Electors",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.censored.data,
-		y = regular.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.censored.data,
-		y = new.electors.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot electors censored\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(2, 1));
-
-	# Start a new empty plot
-	plot(
-		ballots.range,
-		censored.range,
-		type = "n",
-		xlab = "Ballots",
-		ylab = "Censored",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.ballots.data,
-		y = regular.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.ballots.data,
-		y = new.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot censored ballots\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(2, 2));
-
-	# Start a new empty plot
-	plot(
-		votes.range,
-		censored.range,
-		type = "n",
-		xlab = "Votes",
-		ylab = "Censored",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.votes.data,
-		y = regular.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.ballots.data,
-		y = new.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot censored votes\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(2, 3));
-
-	# Start a new empty plot
-	plot(
-		rejected.range,
-		censored.range,
-		type = "n",
-		xlab = "Rejected",
-		ylab = "Censored",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.rejected.data,
-		y = regular.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.rejected.data,
-		y = new.censored.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot censored rejected\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(3, 1));
-
-	# Start a new empty plot
-	plot(
-		ballots.range,
-		rejected.range,
-		type = "n",
-		xlab = "Ballots",
-		ylab = "Rejected",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.ballots.data,
-		y = regular.rejected.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.ballots.data,
-		y = new.rejected.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot rejected ballots\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(3, 2));
-
-	# Start a new empty plot
-	plot(
-		votes.range,
-		rejected.range,
-		type = "n",
-		xlab = "Votes",
-		ylab = "Rejected",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.votes.data,
-		y = regular.rejected.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.votes.data,
-		y = new.rejected.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot rejected votes\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-
-	# Next plot
-	par(mfg = c(4, 1));
-
-	# Start a new empty plot
-	plot(
-		ballots.range,
-		votes.range,
-		type = "n",
-		xlab = "Ballots",
-		ylab = "Votes",
-		frame.plot = FALSE
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = regular.ballots.data,
-		y = regular.votes.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = regular.colour
-	);
-
-	# Pull the needles from the haystack and stick them in the pincushion
-	points(
-		x = new.ballots.data,
-		y = new.votes.data,
-		type = "p",
-		pch = 16,
-		cex = point.size,
-		col = new.colour
-	);
-
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
-toc <- proc.time() - tic;
-cat(toc);
-cat(" - plot votes ballots\n");
-tic <- proc.time();
-# # # # # # # # # # # # # # # # # # # # # # Debug code # # # # # # # # # # # # # # # # # # # # # #
+		}
+	}
 
 	# Close the file
 	if (nchar(file.name) > 0)

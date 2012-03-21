@@ -53,7 +53,7 @@ tic <- proc.time();
 
 	# Stick the needles in the pincushion
 	pincushion.data <- c(sprintf(affiliation.format, 1:(length(thimble.data) + 2)));
-	names(pincushion.data) <- c(thimble.data, censored.electors, rejected.ballots);
+	names(pincushion.data) <- c(thimble.data, rejected.ballots, censored.electors);
 
 	# Hide the needles in the haystack
 	haystack.data[, enumerate.dimension] <- factor(pincushion.data[as.character(haystack.data[, affiliation.dimension])]);

@@ -25,9 +25,12 @@ poll.aggregate.plot <- function(
 	hash.dimension = "affiliation_hash",
 	rejected.ballots = " -- rejected ballots -- ",
 	censored.electors = " -- censored electors -- ",
-	output.width = 8192,
-	output.height = 8192,
-	point.size = 0.5
+	column.count = 5,
+	output.width = 16384,#1024
+	output.height = 16384,#1024
+	inch.resolution = 1024,#64
+	font.size = 8,#12
+	point.size = 0.5#0.125
 )
 {
 
@@ -388,8 +391,8 @@ tic <- proc.time();
 			file = file.name,
 			height = output.height,
 			width = output.width,
-			res = 1024,
-			pointsize = 8,
+			res = inch.resolution,
+			pointsize = font.size,
 			type = "cairo",
 			bg = "white"
 		);
@@ -441,7 +444,7 @@ tic <- proc.time();
 					x = c(0, sort(regular.data[[row.instance]])),
 					y = (0:length(regular.data[[row.instance]])) / length(regular.data[[row.instance]]),
 					type = "s",
-					lwd = point.size,
+					lwd = 0.5,
 					lty = 1,
 					col = "green"
 				);
@@ -451,7 +454,7 @@ tic <- proc.time();
 					x = c(0, sort(new.data[[row.instance]])),
 					y = (0:length(new.data[[row.instance]])) / length(new.data[[row.instance]]),
 					type = "s",
-					lwd = point.size,
+					lwd = 0.5,
 					lty = 1,
 					col = "blue"
 				);

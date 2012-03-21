@@ -19,10 +19,12 @@ elector.affiliate.plot <- function(
 	hash.dimension = "affiliation_hash",
 	rejected.ballots = " -- rejected ballots -- ",
 	censored.electors = " -- censored electors -- ",
-	column.count = 6,
-	output.width = 12288,
-	output.height = 8192,
-	point.size = 0.5
+	column.count = 5,
+	output.width = 16384,#1024
+	output.height = 16384,#1024
+	inch.resolution = 1024,#64
+	font.size = 8,#12
+	point.size = 0.5#0.125
 )
 {
 
@@ -125,7 +127,11 @@ tic <- proc.time();
 	);
 
 	# Drop the needles from the thimble
-	thimble.data <- thimble.data[needle.index];
+	thimble.data <- c(
+		thimble.data[needle.index],
+		rejected.ballots,
+		censored.electors
+	);
 
 	# Save to file
 	if (nchar(file.name) > 0)
@@ -134,8 +140,8 @@ tic <- proc.time();
 			file = file.name,
 			height = output.height,
 			width = output.width,
-			res = 1024,
-			pointsize = 8,
+			res = inch.resolution,
+			pointsize = font.size,
 			type = "cairo",
 			bg = "white"
 		);

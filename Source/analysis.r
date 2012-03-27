@@ -17,3 +17,7 @@ ballot.affiliate.plot(poll.affiliate.data);
 vote.affiliate.plot(poll.affiliate.data);
 elector.affiliate.plot(poll.affiliate.data);
 affiliate.interaction.plot(poll.affiliate.data);
+
+# Analytic plots
+reject.fraction.plot(poll.affiliate.data);
+censor.fraction.plot(poll.affiliate.data);
